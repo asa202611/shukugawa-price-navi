@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#d92323">
+<title>夙川お買い得ナビ</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f5f5;color:#222;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif}
+header{background:#d92323;color:white;padding:22px 18px 18px}
+header h1{font-size:23px;margin:0 0 5px}
+header p{font-size:12px;margin:0;opacity:.9}
+.date{background:#fff4d6;color:#8c4c00;padding:12px 16px;font-size:13px;font-weight:bold}
+main{padding:15px}
+h2{font-size:17px;margin:20px 0 12px}
+.categories{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cat{border:0;border-radius:10px;background:white;padding:13px 3px;font-size:13px;font-weight:bold;box-shadow:0 2px 5px #ddd}
+.cat.active{background:#ffe36a;border:2px solid #e2a900}
+.summary{background:#fff;border-radius:12px;padding:15px;margin-top:17px;box-shadow:0 2px 6px #ddd}
+.summary strong{font-size:18px}
+.notice{font-size:12px;color:#a34b00;background:#fff4d6;padding:10px;border-radius:8px;margin-top:10px;line-height:1.6}
+.store{background:white;border-radius:12px;margin:10px 0;padding:14px;box-shadow:0 2px 5px #ddd}
+.store h3{font-size:15px;margin:0 0 8px}
+.status{font-size:12px;color:#777}
+.price{font-size:14px;font-weight:bold;color:#b22222;margin-top:8px}
+button{cursor:pointer}
+.refresh{width:100%;padding:14px;border:0;border-radius:10px;background:#d92323;color:white;font-weight:bold;font-size:15px;margin-top:15px}
+footer{text-align:center;font-size:11px;color:#888;padding:25px 10px}
+</style>
+</head>
+<body>
+<header>
+<h1>🛒 夙川お買い得ナビ</h1>
+<p>近くのスーパーのお買い得情報を比較</p>
+</header>
+<div class="date" id="today"></div>
+<main>
+<div class="summary">
+<strong>今日のお買い得情報</strong>
+<div class="notice">
+現在、価格情報の自動取得機能は未接続です。<br>
+確認できていない価格は表示せず、「情報なし」と表示します。
+</div>
+</div>
+
+<h2>商品カテゴリー</h2>
+<div class="categories" id="categories">
+<button class="cat active" data-cat="すべて">すべて</button>
+<button class="cat" data-cat="卵">🥚 卵</button>
+<button class="cat" data-cat="牛乳">🥛 牛乳</button>
+<button class="cat" data-cat="パン">🍞 パン</button>
+<button class="cat" data-cat="野菜">🥬 野菜</button>
+<button class="cat" data-cat="鶏肉">🍗 鶏肉</button>
+<button class="cat" data-cat="豚肉">🥩 豚肉</button>
+<button class="cat" data-cat="魚">🐟 魚</button>
+</div>
+
+<h2>スーパー別情報</h2>
+<div id="stores"></div>
+
+<button class="refresh" onclick="showMessage()">情報を更新する</button>
+<div class="notice" id="message" style="display:none">
+価格データの取得機能はまだ準備中です。
+</div>
+</main>
+<footer>
+夙川お買い得ナビ<br>
+価格は確認できた情報のみ掲載します。
+</footer>
+
+<script>
+const stores=[
+"グルメシティ夙川店",
+"ライフ夙川店",
+"コープ夙川",
+"マルハチさくら夙川店",
+"パル・ヤマト夙川店",
+"いかり夙川店",
+"成城石井夙川店",
+"ビッグビーンズ芦屋店"
+];
+
+const categories=["卵","牛乳","パン","野菜","鶏肉","豚肉","魚"];
+let selected="すべて";
+
+function render(){
+ const list=document.getElementById("stores");
+ list.innerHTML="";
+ stores.forEach(name=>{
+  const div=document.createElement("div");
+  div.className="store";
+  div.innerHTML=`<h3>${name}</h3>
+  <div class="status">価格情報：未取得</div>
+  <div class="price">現在、比較できる価格情報はありません</div>`;
+  list.appendChild(div);
+ });
+}
+
+document.querySelectorAll(".cat").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  document.querySelectorAll(".cat").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  selected=btn.dataset.cat;
+  document.getElementById("message").style.display="block";
+  document.getElementById("message").textContent=
+   selected==="すべて"?"すべての商品カテゴリーを選択中です。":
+   selected+"の価格情報はまだ取得できていません。";
+ });
+});
+
+function showMessage(){
+ document.getElementById("message").style.display="block";
+}
+
+document.getElementById("today").textContent=
+ "📅 "+new Date().toLocaleDateString("ja-JP",{year:"numeric",month:"long",day:"numeric"});
+
+render();
+</script>
+</body>
+</html>
