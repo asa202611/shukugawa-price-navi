@@ -1,0 +1,19 @@
+name: Daily price update
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start daily update
+        run: |
+          echo "Shukugawa Price Navi"
+          echo "Daily update process started."
+          echo "Price collection is not connected yet."
